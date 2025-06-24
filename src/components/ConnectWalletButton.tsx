@@ -27,7 +27,7 @@ export default function ConnectWalletButton() {
   if (isConnected) {
     return (
       <div className="flex items-center space-x-2">
-        <div className="hidden sm:flex items-center space-x-2 bg-primary/10 px-3 py-2 rounded-lg">
+        <div className="hidden sm:flex items-center space-x-2 bg-white px-3 py-2 rounded-lg">
           <div className="w-2 h-2 bg-green-500 rounded-full"></div>
           <span className="text-sm font-medium text-primary">
             {mockAddress.slice(0, 6)}...{mockAddress.slice(-4)}
@@ -48,7 +48,7 @@ export default function ConnectWalletButton() {
     <button
       onClick={handleConnect}
       disabled={isLoading}
-      className="flex items-center space-x-2 px-4 py-2 bg-primary hover:bg-primary/90 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+      className="flex items-center space-x-2 px-4 py-2 bg-[#f6f4d3] border-2 border-primary text-primary rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
     >
       <Wallet className="w-4 h-4" />
       <span>{isLoading ? "Connecting..." : "Connect Wallet"}</span>

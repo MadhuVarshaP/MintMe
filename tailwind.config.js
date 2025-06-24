@@ -11,7 +11,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        background: "#f6f4d2",
+        background: "#f6f4d3",
         foreground: "#2d2d2d",
         primary: "#2d2d2d",
         "body-text": "#2d2d2d",
@@ -20,7 +20,7 @@ module.exports = {
         "gray-medium": "#6c757d",
       },
       backgroundColor: {
-        DEFAULT: "#f6f4d2",
+        DEFAULT: "#f6f4d3",
       },
       textColor: {
         DEFAULT: "#2d2d2d",
@@ -32,7 +32,7 @@ module.exports = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["Inter", ...fontFamily.sans],
+        sans: ["var(--font-bricolage-grotesque)", "Bricolage Grotesque", ...fontFamily.sans],
       },
     },
   },

@@ -17,7 +17,7 @@ export default function ResumeCard() {
   }
 
   return (
-    <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-primary/20 hover:border-primary/40 transition-all hover:scale-105">
+    <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-primary/20 hover:border-primary/40  ">
       <div className="flex items-start justify-between mb-6">
         <div>
           <h3 className="text-xl font-bold text-primary mb-1">{mockData.name}</h3>
@@ -65,7 +65,7 @@ export default function ResumeCard() {
 
       {/* Actions */}
       <div className="flex space-x-3">
-        <button className="flex-1 flex items-center justify-center space-x-2 px-4 py-2 bg-primary hover:bg-primary/90 text-white rounded-lg font-semibold transition-colors">
+        <button className="flex-1 flex items-center justify-center space-x-2 px-4 py-2 bg-white/90 border-2 border-primary cursor-pointer rounded-lg font-semibold transition-colors">
           <span>Mint Resume</span>
         </button>
         <button className="flex items-center justify-center px-4 py-2 bg-gray-light hover:bg-gray-200 text-text-dark rounded-lg transition-colors">

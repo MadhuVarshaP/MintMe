@@ -37,7 +37,7 @@ export default function GitHubLinkButton() {
     <button
       onClick={handleLinkGitHub}
       disabled={isLoading}
-      className="flex items-center space-x-3 p-4 bg-white/80 backdrop-blur-sm border border-primary/20 rounded-xl hover:border-primary/40 transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed w-full"
+      className="flex items-center space-x-3 p-4 bg-white/80 backdrop-blur-sm border border-primary/20 rounded-xl hover:border-primary/40   disabled:opacity-50 disabled:cursor-not-allowed w-full"
     >
       <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
         <Github className="w-5 h-5 text-primary" />

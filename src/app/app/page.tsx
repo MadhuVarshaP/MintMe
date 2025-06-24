@@ -52,7 +52,7 @@ export default function AppPage() {
           <div className="bg-gradient-to-r from-primary/10 to-body-text/10 rounded-2xl p-6 text-center">
             <h3 className="text-lg font-semibold text-primary mb-2">Ready to Mint?</h3>
             <p className="text-body-text mb-4">Your resume is ready to be minted as an NFT on the blockchain</p>
-            <button className="px-8 py-3 bg-primary hover:bg-primary/90 text-white rounded-lg font-semibold transition-colors hover:scale-105">
+            <button className="px-8 py-3 bg-primary hover:bg-primary/90 text-white rounded-lg font-semibold ">
               Mint Your Resume NFT
             </button>
           </div>

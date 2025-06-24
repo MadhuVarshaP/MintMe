@@ -1,13 +1,18 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import localFont from "next/font/local"
 import "./globals.css"
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+const bricolageGrotesque = localFont({
+  src: [
+    {
+      path: "../../public/fonts/BricolageGrotesque.ttf",
+      style: "normal",
+    },
+  ],
+  variable: "--font-bricolage-grotesque",
   display: "swap",
 })
 
@@ -22,8 +27,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} min-h-screen flex flex-col`}>
+    <html lang="en" className={bricolageGrotesque.variable}>
+      <body className={`${bricolageGrotesque.className} min-h-screen flex flex-col`}>
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />

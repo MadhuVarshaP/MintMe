@@ -56,7 +56,7 @@ export default function AboutPage() {
           ].map((feature, index) => (
             <div
               key={index}
-              className="bg-white/60 backdrop-blur-sm p-6 rounded-2xl border border-primary/10 hover:border-primary/20 transition-all hover:scale-105"
+              className="bg-white/60 backdrop-blur-sm p-6 rounded-2xl border border-primary/10 hover:border-primary/20  "
             >
               <div className="flex justify-center mb-4">{feature.icon}</div>
               <h3 className="text-lg font-semibold text-primary mb-2 text-center">{feature.title}</h3>
@@ -75,7 +75,7 @@ export default function AboutPage() {
           <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
             <a
               href="/app"
-              className="inline-flex items-center space-x-2 px-8 py-3 bg-primary hover:bg-primary/90 text-white rounded-lg font-semibold transition-colors hover:scale-105"
+              className="inline-flex items-center space-x-2 px-8 py-3 bg-white/90 border-2 border-primary rounded-lg font-semibold "
             >
               <Sparkles className="w-5 h-5" />
               <span>Launch App</span>
@@ -84,7 +84,7 @@ export default function AboutPage() {
               href="https://github.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center space-x-2 px-8 py-3 bg-white/80 backdrop-blur-sm hover:bg-white text-text-dark rounded-lg font-semibold transition-colors hover:scale-105 border border-primary/20"
+              className="inline-flex items-center space-x-2 px-8 py-3 bg-white/80 backdrop-blur-sm hover:bg-white text-text-dark rounded-lg font-semibold  border border-primary/20"
             >
               <Github className="w-5 h-5" />
               <span>View on GitHub</span>
