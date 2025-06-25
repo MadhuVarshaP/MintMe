@@ -22,7 +22,7 @@ export default function AboutPage() {
             </p>
 
             <p className="text-body-text leading-relaxed mb-6">
-              In today's digital economy, proving your technical expertise and professional accomplishments can be
+              In today&apos;s digital economy, proving your technical expertise and professional accomplishments can be
               challenging. MintMe solves this by creating NFT-based resumes that are permanently stored on the
               blockchain, providing employers and collaborators with verifiable proof of your capabilities.
             </p>

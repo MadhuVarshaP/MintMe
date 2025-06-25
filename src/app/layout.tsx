@@ -4,6 +4,7 @@ import localFont from "next/font/local"
 import "./globals.css"
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
+import ClientProvider from "../components/client-layout";
 
 const bricolageGrotesque = localFont({
   src: [
@@ -27,11 +28,25 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={bricolageGrotesque.variable}>
+    <html lang="en" className={bricolageGrotesque.variable} suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                document.documentElement.classList.remove('dark');
+                document.documentElement.style.colorScheme = 'light';
+              } catch (e) {}
+            `,
+          }}
+        />
+      </head>
       <body className={`${bricolageGrotesque.className} min-h-screen flex flex-col`}>
+         <ClientProvider>
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />
+         </ClientProvider>
       </body>
     </html>
   )

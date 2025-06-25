@@ -1,41 +1,34 @@
 "use client"
 
-import { useState } from "react"
+
 import { Wallet, LogOut } from "lucide-react"
+import { usePrivy, useWallets } from "@privy-io/react-auth"
+
 
 export default function ConnectWalletButton() {
-  // Mock authentication state
-  const [isConnected, setIsConnected] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const { login, user, logout, authenticated, ready } = usePrivy()
+  const { wallets } = useWallets()
+  
+  // Check if user is authenticated and has wallets
+  const isConnected = authenticated && user && wallets.length > 0
+  const walletAddress = wallets.length > 0 ? wallets[0].address : null
+  const shortAddress = walletAddress ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}` : "Connect Wallet"
 
-  // Mock wallet address
-  const mockAddress = "0x742d35Cc6634C0532925a3b8D4C9db96590b5"
 
-  const handleConnect = async () => {
-    setIsLoading(true)
-    // Simulate connection delay
-    setTimeout(() => {
-      setIsConnected(true)
-      setIsLoading(false)
-    }, 1500)
-  }
-
-  const handleDisconnect = () => {
-    setIsConnected(false)
-  }
 
   if (isConnected) {
     return (
       <div className="flex items-center space-x-2">
-        <div className="hidden sm:flex items-center space-x-2 bg-white px-3 py-2 rounded-lg">
+        <div className="flex items-center space-x-2 bg-background backdrop-blur-sm px-3 py-2 rounded-lg border border-primary">
           <div className="w-2 h-2 bg-green-500 rounded-full"></div>
           <span className="text-sm font-medium text-primary">
-            {mockAddress.slice(0, 6)}...{mockAddress.slice(-4)}
+            {shortAddress}
           </span>
         </div>
+        {/* Disconnect button */}
         <button
-          onClick={handleDisconnect}
-          className="flex items-center space-x-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-text-dark rounded-lg transition-colors"
+          onClick={() => logout()} 
+          className="flex items-center space-x-2 px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-500 rounded-lg transition-colors"
         >
           <LogOut className="w-4 h-4" />
           <span className="hidden sm:inline">Disconnect</span>
@@ -44,14 +37,27 @@ export default function ConnectWalletButton() {
     )
   }
 
+
+  if (!ready) {
+    return (
+      <button className="relative px-4 py-2 rounded-lg bg-gray-100 text-gray-500 cursor-not-allowed" disabled>
+        <span className="flex items-center gap-2">
+          <Wallet className="h-4 w-4" />
+          Loading...
+        </span>
+      </button>
+    )
+  }
+
+
+
   return (
     <button
-      onClick={handleConnect}
-      disabled={isLoading}
-      className="flex items-center space-x-2 px-4 py-2 bg-[#f6f4d3] border-2 border-primary text-primary rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+      onClick={login}
+      className="flex items-center space-x-2 px-4 py-2 bg-background border-2 border-primary text-primary rounded-lg transition-colors cursor-pointer "
     >
       <Wallet className="w-4 h-4" />
-      <span>{isLoading ? "Connecting..." : "Connect Wallet"}</span>
+      <span>Connect Wallet</span>
     </button>
   )
 }
