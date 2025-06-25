@@ -1,12 +1,16 @@
 'use client';
-
+import React from 'react';
 import { PrivyProvider } from "@privy-io/react-auth";
 import { ThemeProvider } from "@/components/theme-provider";
 
-export default function ClientProvider({ children }) {
+interface ClientProviderProps {
+  children: React.ReactNode;
+}
+
+export default function ClientProvider({ children }: ClientProviderProps) {
   return (
     <PrivyProvider
-      appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID}
+      appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID || ""}
       config={{
         loginMethods: ["wallet", "email"],
         appearance: {
@@ -14,8 +18,7 @@ export default function ClientProvider({ children }) {
           accentColor: "#2d2d2d",
         },
         embeddedWallets: {
-          createOnLogin: "users-without-wallets",
-          noPromptOnSignature: false,
+          createOnLogin: "users-without-wallets" as const,
         },
         defaultChain: {
           id: 11155111,

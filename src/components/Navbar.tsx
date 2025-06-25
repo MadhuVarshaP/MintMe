@@ -4,7 +4,6 @@ import Link from "next/link"
 import { useState } from "react"
 import { Menu, X, Wallet } from "lucide-react"
 import ConnectWalletButton from "./ConnectWalletButton"
-import { usePrivy, useWallets } from "@privy-io/react-auth"
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
