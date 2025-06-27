@@ -4,18 +4,33 @@ import { useState } from "react"
 import { Github, Check, ExternalLink } from "lucide-react"
 
 export default function GitHubLinkButton() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isLinked, setIsLinked] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleLinkGitHub = async () => {
-    setIsLoading(true)
-    // Simulate OAuth flow
-    setTimeout(() => {
-      setIsLinked(true)
-      setIsLoading(false)
-    }, 2000)
-  }
+  // const handleLinkGitHub = async () => {
+  //   setIsLoading(true)
+  //   // Simulate OAuth flow
+  //   setTimeout(() => {
+  //     setIsLinked(true)
+  //     setIsLoading(false)
+  //   }, 2000)
+  // }
 
+  const startReclaim = async () => {
+    setIsLoading(true)
+    try {
+      const res = await fetch('/api/generate-config')
+      const { reclaimProofRequestConfig } = await res.json()
+
+      const parsedConfig = JSON.parse(reclaimProofRequestConfig)
+      window.location.href = parsedConfig.reclaimUrl
+    } catch (err) {
+      console.error('Error starting reclaim flow:', err)
+    } finally {
+      setIsLoading(false)
+    }
+  }
   if (isLinked) {
     return (
       <div className="flex items-center space-x-3 p-4 bg-green-50 border border-green-200 rounded-xl">
@@ -35,7 +50,8 @@ export default function GitHubLinkButton() {
 
   return (
     <button
-      onClick={handleLinkGitHub}
+      // onClick={handleLinkGitHub}
+      onClick={startReclaim}
       disabled={isLoading}
       className="flex items-center space-x-3 p-4 bg-white/80 backdrop-blur-sm border border-primary/20 rounded-xl hover:border-primary/40   disabled:opacity-50 disabled:cursor-not-allowed w-full"
     >
