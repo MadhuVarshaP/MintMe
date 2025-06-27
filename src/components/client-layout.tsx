@@ -12,7 +12,7 @@ export default function ClientProvider({ children }: ClientProviderProps) {
     <PrivyProvider
       appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID || ""}
       config={{
-        loginMethods: ["wallet", "email"],
+        loginMethods: ["wallet", "email", "google", "twitter"],
         appearance: {
           theme: "light",
           accentColor: "#2d2d2d",
@@ -21,30 +21,36 @@ export default function ClientProvider({ children }: ClientProviderProps) {
           createOnLogin: "users-without-wallets" as const,
         },
         defaultChain: {
-          id: 11155111,
-          name: "Sepolia",
-          network: "sepolia",
+          id: 84532,
+          name: "Base Sepolia",
+          network: "base-sepolia",
           nativeCurrency: {
             decimals: 18,
-            name: "Sepolia Ether",
+            name: "Base Sepolia Ether",
             symbol: "ETH",
           },
           rpcUrls: {
             default: {
-              http: ["https://ethereum-sepolia-rpc.publicnode.com"],
+              http: ["https://sepolia.base.org"],
             },
             public: {
-              http: ["https://ethereum-sepolia-rpc.publicnode.com"],
+              http: ["https://sepolia.base.org"],
             },
           },
           blockExplorers: {
-            default: { name: "Etherscan", url: "https://sepolia.etherscan.io" },
+            default: { name: "Basescan", url: "https://sepolia.basescan.org" },
           },
           testnet: true,
         },
       }}
     >
-      <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange forcedTheme="light">
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="light"
+        enableSystem={false}
+        disableTransitionOnChange
+        forcedTheme="light"
+      >
         {children}
       </ThemeProvider>
     </PrivyProvider>
