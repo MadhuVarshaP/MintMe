@@ -11,6 +11,7 @@ export async function createAndTriggerReclaimFlow({
   appSecret: string
   providerId: string
   callbackUrl: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   options?: Record<string, any>
 }) {
   const reclaimProofRequest = await ReclaimProofRequest.init(
