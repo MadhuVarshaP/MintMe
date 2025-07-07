@@ -1,9 +1,9 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 
-export default function VerificationCompletePage() {
+function VerificationHandler() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const proofId = searchParams?.get("proofId")
@@ -20,8 +20,15 @@ export default function VerificationCompletePage() {
     return () => clearTimeout(timeout)
   }, [proofId, router])
 
+  return null
+}
+
+export default function VerificationCompletePage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-white">
+      <Suspense fallback={null}>
+        <VerificationHandler />
+      </Suspense>
       <div className="max-w-md w-full bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-8 flex flex-col items-center space-y-6 border border-primary/20">
         <svg className="w-12 h-12 text-primary animate-spin" fill="none" viewBox="0 0 24 24">
           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
