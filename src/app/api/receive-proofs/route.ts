@@ -2,10 +2,10 @@ import { verifyProof } from '@reclaimprotocol/js-sdk'
 import { NFTStorage, File } from 'nft.storage'
 import { NextRequest, NextResponse } from 'next/server'
 
-// ✅ Load your NFT.Storage token from environment
+//  Load your NFT.Storage token from environment
 const nftStorageToken = process.env.NFT_STORAGE_TOKEN!
 
-// ✅ Configure max body size if needed
+//  Configure max body size if needed
 export const config = {
   api: {
     bodyParser: {
@@ -14,7 +14,7 @@ export const config = {
   },
 }
 
-// ✅ Utility function to extract fields from proof
+// Utility function to extract fields from proof
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function extractGitHubInfo(proof: any) {
   const data = proof.claimData || proof.publicData || {}
@@ -26,7 +26,7 @@ function extractGitHubInfo(proof: any) {
   }
 }
 
-// ✅ Main handler
+// Main handler
 export async function POST(req: NextRequest) {
   try {
     // Step 1: Decode the Reclaim proof body (sent as URL-encoded string)
@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
     })
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
-    console.error('❌ Failed to handle Reclaim proof:', err)
+    console.error('Failed to handle Reclaim proof:', err)
     return NextResponse.json({ error: 'Verification or upload failed', details: err.message }, { status: 500 })
   }
 }

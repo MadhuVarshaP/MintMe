@@ -8,15 +8,16 @@ export default function GitHubLinkButton() {
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
+    // Check for verification result on mount
     const urlParams = new URLSearchParams(window.location.search)
     const verification = urlParams.get("verification")
 
     if (verification === "success") {
-      console.log("✅ Verification successful!")
       setIsLinked(true)
+      // Clean up URL parameters
       window.history.replaceState({}, document.title, window.location.pathname)
     } else if (verification === "error") {
-      console.log("❌ Verification failed")
+      setIsLinked(false)
       alert("Verification failed. Please try again.")
       window.history.replaceState({}, document.title, window.location.pathname)
     }
@@ -34,10 +35,8 @@ export default function GitHubLinkButton() {
       }
 
       const { reclaimUrl } = await res.json()
-
       if (!reclaimUrl) throw new Error("No reclaim URL returned")
 
-      console.log("➡️ Redirecting to Reclaim:", reclaimUrl)
       window.location.href = reclaimUrl
     } catch (err) {
       console.error("Error starting reclaim flow:", err)
@@ -55,7 +54,7 @@ export default function GitHubLinkButton() {
         </div>
         <div className="flex-1">
           <p className="font-semibold text-green-800">GitHub Connected</p>
-          <p className="text-sm text-green-600">@johndoe • 127 repositories</p>
+          <p className="text-sm text-green-600">Your GitHub is verified</p>
         </div>
         <button className="text-green-600 hover:text-green-700 transition-colors">
           <ExternalLink className="w-5 h-5" />
