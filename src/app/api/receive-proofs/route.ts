@@ -2,69 +2,61 @@ import { verifyProof } from '@reclaimprotocol/js-sdk'
 import { NFTStorage, File } from 'nft.storage'
 import { NextRequest, NextResponse } from 'next/server'
 
-//  Load your NFT.Storage token from environment
 const nftStorageToken = process.env.NFT_STORAGE_TOKEN!
 
-//  Configure max body size if needed
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: '2mb',
-    },
-  },
-}
-
-// Utility function to extract fields from proof
+// Utility: Extract GitHub data from Reclaim claims
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function extractGitHubInfo(proof: any) {
-  const data = proof.claimData || proof.publicData || {}
-  return {
-    username: data.username || data.login || 'unknown',
-    stars: Number(data.stars || data.starCount || 0),
-    repos: Number(data.repos || data.repoCount || 0),
-    name: data.name || 'GitHub Verified Resume',
-  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const stars = Number(proof.claims.find((c: any) => c.claimType === "GitHub Stars")?.value || 0)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const repos = Number(proof.claims.find((c: any) => c.claimType === "GitHub Public Repos")?.value || 0)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const username = proof.claims.find((c: any) => c.claimType === "GitHub Username")?.value || 'unknown'
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const name = proof.claims.find((c: any) => c.claimType === "Full Name")?.value || 'GitHub Verified Resume'
+
+  return { stars, repos, username, name }
 }
 
-// Main handler
 export async function POST(req: NextRequest) {
   try {
-    // Step 1: Decode the Reclaim proof body (sent as URL-encoded string)
-    const rawBody = await req.text()
-    const decoded = decodeURIComponent(rawBody)
-    const proof = JSON.parse(decoded)
+    // Step 1: Parse raw JSON body from Reclaim
+    const proof = await req.json()
+    console.log('Received Reclaim Proof:', proof)
 
-    // Step 2: Verify authenticity
+    // Step 2: Verify the signature
     const isValid = await verifyProof(proof)
     if (!isValid) {
-      return NextResponse.json({ error: 'Invalid proof: signature check failed' }, { status: 400 })
+      return NextResponse.json({ error: 'Invalid proof: verification failed' }, { status: 400 })
     }
 
-    // Step 3: Extract GitHub claim data
-    const { username, stars, repos, name } = extractGitHubInfo(proof)
-
-    // Step 4: Compute your reputation score formula
+    // Step 3: Extract GitHub metrics
+    const { stars, repos, username, name } = extractGitHubInfo(proof)
     const reputationScore = (stars * 0.5) + (repos * 2)
 
-    // Step 5: Build the metadata object for resume
+    // Step 4: Create IPFS metadata
     const resumeMetadata = {
       name,
-      attributes: {
-        username,
-        stars,
-        repos,
-        reputationScore,
-      },
-      proof,
+      description: 'GitHub-verified onchain resume',
+      attributes: [
+        { trait_type: 'Username', value: username },
+        { trait_type: 'Stars', value: stars },
+        { trait_type: 'Repos', value: repos },
+        { trait_type: 'Reputation Score', value: reputationScore },
+        { trait_type: 'Version', value: 'v1' },
+        { trait_type: 'Timestamp', value: Date.now() }
+      ],
+      proof
     }
 
-    // Step 6: Upload to IPFS via nft.storage
+    // Step 5: Upload to IPFS
     const client = new NFTStorage({ token: nftStorageToken })
     const blob = new Blob([JSON.stringify(resumeMetadata)], { type: 'application/json' })
-    const file = new File([blob], 'resume.json', { type: 'application/json' })
+    const file = new File([blob], 'resume-v1.json', { type: 'application/json' })
     const cid = await client.storeBlob(file)
 
-    // Step 7: Send success response
+    // Step 6: Send response
     return NextResponse.json({
       message: 'Proof verified and resume uploaded',
       username,
@@ -74,7 +66,10 @@ export async function POST(req: NextRequest) {
     })
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
-    console.error('Failed to handle Reclaim proof:', err)
-    return NextResponse.json({ error: 'Verification or upload failed', details: err.message }, { status: 500 })
+    console.error('Reclaim Proof Handling Error:', err)
+    return NextResponse.json({
+      error: 'Verification or upload failed',
+      details: err.message
+    }, { status: 500 })
   }
 }

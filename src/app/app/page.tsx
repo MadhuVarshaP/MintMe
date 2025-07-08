@@ -1,7 +1,8 @@
 import ProtectedRoute from "@/components/ProtectedRoute"
 import GitHubLinkButton from "@/components/GitHubLinkButton"
 import ResumeCard from "@/components/ResumeCard"
-import { Wallet, Github, Sparkles } from "lucide-react"
+import WalletStatus from "@/components/WalletStatus"
+import { Github, Sparkles } from "lucide-react"
 
 export default function AppPage() {
   return (
@@ -17,18 +18,7 @@ export default function AppPage() {
           </div>
 
           {/* Wallet Status */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-primary/20 mb-8">
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                <Wallet className="w-6 h-6 text-green-600" />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-primary">Wallet Connected</h3>
-                <p className="text-body-text">0x742d35Cc6634C0532925a3b8D4C9db96590b5</p>
-              </div>
-              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-            </div>
-          </div>
+          <WalletStatus />
 
           {/* GitHub Connection */}
           <div className="mb-8">

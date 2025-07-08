@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 interface ClientProviderProps {
   children: React.ReactNode;
 }
+console.log(process.env.NEXT_PUBLIC_PRIVY_APP_ID)
 
 export default function ClientProvider({ children }: ClientProviderProps) {
   return (

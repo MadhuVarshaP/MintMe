@@ -25,6 +25,16 @@ export async function GET() {
     console.log('Setting callback URL...')
     reclaimProofRequest.setAppCallbackUrl(`${BASE_URL}/api/receive-proofs`)
 
+    console.log('Setting modal options...')
+    reclaimProofRequest.setModalOptions({
+      title: 'Verify GitHub Account',
+      description: 'Scan this QR code with the Reclaim app',
+      darkTheme: true,
+      extensionUrl: 'https://chrome.google.com/webstore/detail/reclaim',
+      showExtensionInstallButton: true,
+      modalPopupTimer: 2,
+    })
+
     console.log('Generating request URL...')
     const requestUrl = await reclaimProofRequest.getRequestUrl()
 
