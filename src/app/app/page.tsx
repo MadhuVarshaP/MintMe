@@ -3,6 +3,7 @@ import GitHubLinkButton from "@/components/GitHubLinkButton"
 import ResumeCard from "@/components/ResumeCard"
 import WalletStatus from "@/components/WalletStatus"
 import { Github, Sparkles } from "lucide-react"
+import ReclaimVerification from "@/components/ReclaimVerification"
 
 export default function AppPage() {
   return (
@@ -28,6 +29,8 @@ export default function AppPage() {
             </h2>
             <GitHubLinkButton />
           </div>
+
+          <ReclaimVerification />
 
           {/* Resume Preview */}
           <div className="mb-8">
