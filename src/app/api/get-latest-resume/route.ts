@@ -8,7 +8,7 @@ const dbName = process.env.MONGODB_DB || "mintme";
 let client: MongoClient;
 let db: Db;
 
-export async function getDb() {
+async function getDb() {
   if (!client || !db) {
     client = new MongoClient(uri);
     await client.connect();
@@ -43,7 +43,14 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: 'Failed to fetch proof from Pinata', status: proofRes.status }, { status: 502 });
     }
     const proof = await proofRes.json();
-    const publicData = proof.publicData || {};
+    // eslint-disable-next-line prefer-const
+    let publicData = proof.publicData || {};
+    // Sanitize: Convert any Set properties to arrays
+    for (const key in publicData) {
+      if (publicData[key] instanceof Set) {
+        publicData[key] = Array.from(publicData[key]);
+      }
+    }
     const resume = {
       name: publicData.username || 'Unknown',
       title: 'Web3 Developer',
