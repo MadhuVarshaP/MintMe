@@ -1,11 +1,55 @@
+"use client"
+
 import ProtectedRoute from "@/components/ProtectedRoute"
 import GitHubLinkButton from "@/components/GitHubLinkButton"
 import ResumeCard from "@/components/ResumeCard"
 import WalletStatus from "@/components/WalletStatus"
 import { Github, Sparkles } from "lucide-react"
 import ReclaimVerification from "@/components/ReclaimVerification"
+import { useEffect, useState } from "react"
+
+interface Resume {
+  name: string;
+  title: string;
+  location: string;
+  experience: string;
+  skills?: string[];
+  projects?: { name: string; stars: number }[];
+  followers?: string;
+  creationYear?: string;
+  contributionsLastYear?: string;
+}
 
 export default function AppPage() {
+  const [resume, setResume] = useState<Resume | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  // For demo, use a hardcoded GitHub username. Replace with session/user context as needed.
+  const username = "MadhuVarshaP";
+
+  const fetchResume = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/get-latest-resume?userId=${username}`);
+      const data = await res.json();
+      if (data.error) {
+        setError(data.error);
+        setResume(null);
+      } else {
+        setResume(data.resume);
+      }
+    } catch {
+      setError('Failed to fetch resume data');
+      setResume(null);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchResume();
+  }, [username]);
+
   return (
     <ProtectedRoute>
       <div className="min-h-screen py-12">
@@ -38,7 +82,31 @@ export default function AppPage() {
               <Sparkles className="w-5 h-5" />
               <span>Resume Preview</span>
             </h2>
-            <ResumeCard />
+            <button
+              onClick={fetchResume}
+              className="mb-4 px-4 py-2 bg-primary text-white rounded hover:bg-primary/80"
+              disabled={loading}
+            >
+              {loading ? "Refreshing..." : "Refresh"}
+            </button>
+            {loading ? (
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-primary/20 text-center">
+                <div className="text-body-text">Loading resume data...</div>
+              </div>
+            ) : error ? (
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-red-200 text-center">
+                <div className="text-red-600">{error}</div>
+                <p className="text-body-text text-sm mt-2">
+                  Make sure you have completed the GitHub verification process.
+                </p>
+              </div>
+            ) : resume ? (
+              <ResumeCard resume={resume} />
+            ) : (
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-primary/20 text-center">
+                <div className="text-body-text">No resume data available. Please connect your wallet and complete the verification process.</div>
+              </div>
+            )}
           </div>
 
           {/* Next Steps */}

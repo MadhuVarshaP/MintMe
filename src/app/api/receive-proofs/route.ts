@@ -1,5 +1,21 @@
+export const runtime = "nodejs";
 import { verifyProof } from '@reclaimprotocol/js-sdk';
 import { NextRequest, NextResponse } from 'next/server';
+import { uploadJsonToPinata } from '@/lib/pinata';
+import { MongoClient, Db } from 'mongodb';
+
+const uri = process.env.MONGODB_URI!;
+const dbName = process.env.MONGODB_DB || 'mintme';
+let client: MongoClient;
+let db: Db;
+export async function getDb() {
+  if (!client || !db) {
+    client = new MongoClient(uri);
+    await client.connect();
+    db = client.db(dbName);
+  }
+  return db;
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -39,9 +55,24 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid proofs data' }, { status: 400 });
     }
 
-    // (Optional) Process/store the proof as needed here
-
-    return NextResponse.json({ message: 'Proof verified' }, { status: 200 });
+    // Upload the verified proof to Pinata and store in MongoDB
+    try {
+      const pinataRes = await uploadJsonToPinata(proof);
+      // Use GitHub username as userId
+      const userId = proof.publicData?.username;
+      if (!userId) {
+        return NextResponse.json({ error: 'No username found in proof publicData' }, { status: 400 });
+      }
+      const db = await getDb();
+      await db.collection('proofs').insertOne({
+        userId,
+        ipfsHash: pinataRes.IpfsHash,
+        timestamp: new Date(),
+      });
+      return NextResponse.json({ message: 'Proof verified and uploaded', ipfsHash: pinataRes.IpfsHash, pinataRes });
+    } catch (uploadErr) {
+      return NextResponse.json({ error: 'Proof verified but failed to upload to Pinata or DB', details: String(uploadErr) }, { status: 500 });
+    }
   } catch (err: unknown) {
     const errorMessage = err instanceof Error ? err.message : String(err);
     return NextResponse.json({

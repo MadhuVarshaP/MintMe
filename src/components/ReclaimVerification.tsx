@@ -2,16 +2,26 @@
 import { useEffect, useState } from "react";
 import QRCode from "react-qr-code";
 import { ReclaimProofRequest } from "@reclaimprotocol/js-sdk";
+import { useWallets } from '@privy-io/react-auth';
 
 export default function ReclaimVerification() {
   const [requestUrl, setRequestUrl] = useState("");
   const [proofs, setProofs] = useState<boolean | null>(null);
+  const { wallets } = useWallets();
 
   useEffect(() => {
     const getVerificationReq = async () => {
       try {
-        // 1. Fetch config from backend
-        const response = await fetch("/api/generate-config");
+        const connectedWallet = wallets.find(wallet => wallet.connectorType !== 'embedded');
+        if (!connectedWallet?.address) {
+          return;
+        }
+        // 1. Fetch config from backend with wallet address
+        const response = await fetch("/api/generate-config", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ walletAddress: connectedWallet.address })
+        });
         const { reclaimProofRequestConfig } = await response.json();
 
         // 2. Initialize ReclaimProofRequest
@@ -40,7 +50,7 @@ export default function ReclaimVerification() {
     };
 
     getVerificationReq();
-  }, []);
+  }, [wallets]);
 
   return (
     <div>
