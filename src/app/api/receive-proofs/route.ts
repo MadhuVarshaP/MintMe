@@ -8,7 +8,7 @@ const uri = process.env.MONGODB_URI!;
 const dbName = process.env.MONGODB_DB || 'mintme';
 let client: MongoClient;
 let db: Db;
-export async function getDb() {
+async function getDb() {
   if (!client || !db) {
     client = new MongoClient(uri);
     await client.connect();
